@@ -1,0 +1,20 @@
+{
+  "name": "rental",
+  "version": "1.0.0",
+  "description": "Mutant DNA Detector - Technical Test",
+  "type": "module",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "npm run dev:backend & npm run dev:frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "test": "npm test --workspace=backend",
+    "build": "npm run build --workspace=frontend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
