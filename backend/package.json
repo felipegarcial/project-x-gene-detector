@@ -7,9 +7,10 @@
     "dev": "tsx watch src/app.ts",
     "start": "node dist/app.js",
     "build": "tsc",
-    "test": "node --experimental-vm-modules node_modules/.bin/vitest run",
-    "test:watch": "node --experimental-vm-modules node_modules/.bin/vitest",
-    "test:coverage": "node --experimental-vm-modules node_modules/.bin/vitest run --coverage"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:integration": "vitest run --config vitest.integration.config.ts"
   },
   "dependencies": {
     "express": "^5.2.1",
