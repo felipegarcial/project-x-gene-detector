@@ -1,0 +1,32 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Mutant DNA Detector API",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/app.ts",
+    "start": "node dist/app.js",
+    "build": "tsc",
+    "test": "node --experimental-vm-modules node_modules/.bin/vitest run",
+    "test:watch": "node --experimental-vm-modules node_modules/.bin/vitest",
+    "test:coverage": "node --experimental-vm-modules node_modules/.bin/vitest run --coverage"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "cors": "^2.8.5",
+    "zod": "^3.25.67",
+    "@supabase/supabase-js": "^2.49.9",
+    "dotenv": "^16.5.0",
+    "crypto-js": "^4.2.0"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3",
+    "@types/express": "^5.0.2",
+    "@types/cors": "^2.8.19",
+    "tsx": "^4.20.3",
+    "vitest": "^3.2.4",
+    "@vitest/coverage-v8": "^3.2.4",
+    "supertest": "^7.1.0",
+    "@types/supertest": "^6.0.2"
+  }
+}
