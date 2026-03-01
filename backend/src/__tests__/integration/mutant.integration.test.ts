@@ -28,7 +28,9 @@ describeIntegration('POST /mutant (integration)', () => {
       .send({ dna: MUTANT_DNA })
 
     expect(res.status).toBe(200)
-    expect(res.body).toEqual({ is_mutant: true })
+    expect(res.body.is_mutant).toBe(true)
+    expect(res.body.sequences).toBeDefined()
+    expect(res.body.sequences.length).toBeGreaterThanOrEqual(2)
   })
 
   it('should detect human DNA and persist to database', async () => {
@@ -37,27 +39,26 @@ describeIntegration('POST /mutant (integration)', () => {
       .send({ dna: HUMAN_DNA })
 
     expect(res.status).toBe(403)
-    expect(res.body).toEqual({ is_mutant: false })
+    expect(res.body.is_mutant).toBe(false)
+    expect(res.body.sequences).toBeDefined()
   })
 
   it('should return cached result for duplicate mutant DNA', async () => {
-    // MUTANT_DNA was already inserted in the first test
     const res = await request(app)
       .post('/mutant')
       .send({ dna: MUTANT_DNA })
 
     expect(res.status).toBe(200)
-    expect(res.body).toEqual({ is_mutant: true })
+    expect(res.body.is_mutant).toBe(true)
   })
 
   it('should return cached result for duplicate human DNA', async () => {
-    // HUMAN_DNA was already inserted in the second test
     const res = await request(app)
       .post('/mutant')
       .send({ dna: HUMAN_DNA })
 
     expect(res.status).toBe(403)
-    expect(res.body).toEqual({ is_mutant: false })
+    expect(res.body.is_mutant).toBe(false)
   })
 
   it('should reject invalid DNA without touching database', async () => {

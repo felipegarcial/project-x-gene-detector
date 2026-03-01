@@ -10,9 +10,13 @@ vi.mock('../../mutant/mutant.repository.js', () => ({
   },
 }))
 
+import { mutantRepository } from '../mutant.repository.js'
+
 describe('POST /mutant', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.mocked(mutantRepository.findByHash).mockResolvedValue(null)
+    vi.mocked(mutantRepository.upsert).mockResolvedValue({} as never)
   })
 
   it('should return 200 for a mutant DNA with sequences', async () => {
@@ -37,6 +41,38 @@ describe('POST /mutant', () => {
 
     expect(response.status).toBe(403)
     expect(response.body.is_mutant).toBe(false)
+    expect(response.body.sequences).toBeDefined()
+  })
+
+  it('should return cached result for previously analyzed DNA', async () => {
+    vi.mocked(mutantRepository.findByHash).mockResolvedValue({
+      dna_hash: 'abc',
+      dna_sequence: ['ATGCGA', 'CAGTGC', 'TTATGT', 'AGAAGG', 'CCCCTA', 'TCACTG'],
+      is_mutant: true,
+    })
+
+    const response = await request(app)
+      .post('/mutant')
+      .send({
+        dna: ['ATGCGA', 'CAGTGC', 'TTATGT', 'AGAAGG', 'CCCCTA', 'TCACTG'],
+      })
+
+    expect(response.status).toBe(200)
+    expect(response.body.is_mutant).toBe(true)
+    expect(mutantRepository.upsert).not.toHaveBeenCalled()
+  })
+
+  it('should still return result when database persistence fails', async () => {
+    vi.mocked(mutantRepository.upsert).mockRejectedValue(new Error('DB down'))
+
+    const response = await request(app)
+      .post('/mutant')
+      .send({
+        dna: ['ATGCGA', 'CAGTGC', 'TTATGT', 'AGAAGG', 'CCCCTA', 'TCACTG'],
+      })
+
+    expect(response.status).toBe(200)
+    expect(response.body.is_mutant).toBe(true)
     expect(response.body.sequences).toBeDefined()
   })
 
