@@ -99,6 +99,7 @@ export function useScanner() {
   const [result, setResult] = useState<MutantResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [dna, setDna] = useState<string[]>([])
 
   function handleInput(value: string) {
     setInput(normalizeInput(value))
@@ -108,17 +109,18 @@ export function useScanner() {
     setError(null)
     setResult(null)
 
-    const dna = parseDna(input)
-    const validationError = validateDna(dna)
+    const parsed = parseDna(input)
+    const validationError = validateDna(parsed)
 
     if (validationError) {
       setError(validationError)
       return
     }
 
+    setDna(parsed)
     setLoading(true)
     try {
-      const response = await analyzeDna(dna)
+      const response = await analyzeDna(parsed)
       setResult(response)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
@@ -131,9 +133,10 @@ export function useScanner() {
     setInput('')
     setResult(null)
     setError(null)
+    setDna([])
   }
 
   const canSubmit = !loading && input.trim().length > 0
 
-  return { input, handleInput, result, error, loading, canSubmit, analyze, clear }
+  return { input, handleInput, result, error, loading, canSubmit, analyze, clear, dna }
 }
