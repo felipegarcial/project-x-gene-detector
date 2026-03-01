@@ -6,6 +6,7 @@ export function useCountUp(target: number, duration = 600) {
     [],
   )
 
+  const isDecimal = target % 1 !== 0
   const [display, setDisplay] = useState(prefersReduced ? target : 0)
   const frameRef = useRef(0)
 
@@ -19,14 +20,15 @@ export function useCountUp(target: number, duration = 600) {
       const elapsed = now - start
       const progress = Math.min(elapsed / duration, 1)
       const eased = 1 - Math.pow(1 - progress, 3)
-      setDisplay(Math.round(eased * target))
+      const value = eased * target
+      setDisplay(isDecimal ? parseFloat(value.toFixed(2)) : Math.round(value))
       if (progress < 1) {
         frameRef.current = requestAnimationFrame(tick)
       }
     }
     frameRef.current = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frameRef.current)
-  }, [target, duration, prefersReduced])
+  }, [target, duration, prefersReduced, isDecimal])
 
   return prefersReduced ? target : display
 }

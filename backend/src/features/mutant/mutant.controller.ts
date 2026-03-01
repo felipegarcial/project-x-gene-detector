@@ -27,7 +27,7 @@ export const mutantController = {
       is_mutant,
     })
 
-    // Per challenge spec: 200 = mutant, 403 = human
+    // API contract: 200 = mutant, 403 = human
     res.status(is_mutant ? 200 : 403).json({
       is_mutant,
       sequences,

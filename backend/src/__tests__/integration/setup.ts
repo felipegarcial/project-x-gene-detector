@@ -25,7 +25,7 @@
  *
  * ### 4. Separate DB per environment
  * - One Supabase project for dev, another for test, another for prod.
- * - Correct but heavyweight for a technical test project.
+ * - Correct but heavyweight for this project scope.
  *
  * ### 5. Separate schema/tables for tests
  * - Same DB but tables with a `test_` prefix or a dedicated schema.
