@@ -20,8 +20,10 @@ export const mutantController = {
     try {
       const cached = await mutantRepository.findByHash(dnaHash)
       if (cached) {
+        const { sequences } = isMutant(cached.dna_sequence)
         res.status(cached.is_mutant ? 200 : 403).json({
           is_mutant: cached.is_mutant,
+          sequences,
         })
         return
       }

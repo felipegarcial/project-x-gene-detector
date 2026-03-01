@@ -44,7 +44,7 @@ describe('POST /mutant', () => {
     expect(response.body.sequences).toBeDefined()
   })
 
-  it('should return cached result for previously analyzed DNA', async () => {
+  it('should return cached result with sequences for previously analyzed DNA', async () => {
     vi.mocked(mutantRepository.findByHash).mockResolvedValue({
       dna_hash: 'abc',
       dna_sequence: ['ATGCGA', 'CAGTGC', 'TTATGT', 'AGAAGG', 'CCCCTA', 'TCACTG'],
@@ -59,6 +59,8 @@ describe('POST /mutant', () => {
 
     expect(response.status).toBe(200)
     expect(response.body.is_mutant).toBe(true)
+    expect(response.body.sequences).toBeDefined()
+    expect(response.body.sequences.length).toBeGreaterThanOrEqual(2)
     expect(mutantRepository.upsert).not.toHaveBeenCalled()
   })
 
