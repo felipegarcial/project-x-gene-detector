@@ -151,7 +151,7 @@ npm run test:integration --workspace=backend
 
 ```
 ┌──────────────┐         ┌──────────────────┐         ┌──────────────┐
-│    React     │  HTTP   │  Express REST API │   SQL   │   Supabase   │
+│    React     │  HTTP   │ Express REST API │   SQL   │   Supabase   │
 │   Frontend   │────────▶│  (Node.js + TS)  │────────▶│ (PostgreSQL) │
 │  Vite + TW   │◀────────│                  │◀────────│              │
 └──────────────┘         └──────────────────┘         └──────────────┘
