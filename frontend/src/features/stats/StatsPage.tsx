@@ -1,5 +1,5 @@
 import { Button } from '@/shared/components/ui/button'
-import { StatCard } from './components'
+import { StatCard, DnaDonutChart } from './components'
 import { useStats, useCountUp } from './hooks'
 
 export default function StatsPage() {
@@ -39,11 +39,15 @@ export default function StatsPage() {
     <div className="space-y-10">
       <div className="text-center">
         <h1 className="text-4xl font-bold tracking-tight">
-          DNA <span className="text-primary">Statistics</span>
+          <span className="glow-text">DNA</span> <span className="text-primary glow-text">Statistics</span>
         </h1>
         <p className="text-muted-foreground mt-2">
-          Global DNA verification results from Cerebro's database.
+          Global DNA verification results from the X-Gene database.
         </p>
+      </div>
+
+      <div className="flex justify-center">
+        <DnaDonutChart mutant={stats.count_mutant_dna} human={stats.count_human_dna} />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -52,7 +56,7 @@ export default function StatsPage() {
         <StatCard label="Ratio" displayValue={ratioDisplay} />
       </div>
 
-      <p className="text-sm text-muted-foreground text-center">
+      <p className="text-xs text-muted-foreground text-center">
         Total analyzed: <span className="font-medium text-foreground">{total}</span>
       </p>
     </div>

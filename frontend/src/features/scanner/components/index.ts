@@ -1,4 +1,4 @@
-export { CerebroLanding } from './CerebroLanding'
+export { XGeneLanding } from './XGeneLanding'
 export { DnaInput } from './DnaInput'
 export { DnaGrid } from './DnaGrid'
 export { ScannerForm } from './ScannerForm'

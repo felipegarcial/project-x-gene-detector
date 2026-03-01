@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'motion/react'
-import { CerebroLanding, ScannerForm } from './components'
+import { XGeneLanding, ScannerForm } from './components'
 import { useScannerSession, useScanner } from './hooks'
 
 export default function ScannerPage() {
@@ -20,7 +20,7 @@ export default function ScannerPage() {
 
   return (
     <div>
-      <CerebroLanding
+      <XGeneLanding
         started={started}
         onStart={start}
         transition={transition}

@@ -1,17 +1,17 @@
 import { motion, type Transition } from 'motion/react'
 import { Button } from '@/shared/components/ui/button'
-import { CerebroHero } from '../CerebroHero'
+import { XGeneHero } from '../XGeneHero'
 
-interface CerebroLandingProps {
+interface XGeneLandingProps {
   started: boolean
   onStart: () => void
   transition: Transition
 }
 
-export function CerebroLanding({ started, onStart, transition }: CerebroLandingProps) {
+export function XGeneLanding({ started, onStart, transition }: XGeneLandingProps) {
   return (
     <motion.div
-      animate={{ marginTop: started ? 0 : 200 }}
+      animate={{ marginTop: started ? -40 : 200 }}
       transition={transition}
       className={`text-center flex flex-col items-center ${started ? 'space-y-4 mb-10' : 'space-y-4'}`}
     >
@@ -19,7 +19,7 @@ export function CerebroLanding({ started, onStart, transition }: CerebroLandingP
         animate={{ scale: started ? 0.65 : 1 }}
         transition={transition}
       >
-        <CerebroHero className="w-80 h-80 sm:w-[28rem] sm:h-[28rem]" />
+        <XGeneHero className="w-80 h-80 sm:w-[28rem] sm:h-[28rem]" />
       </motion.div>
 
       <motion.h1
@@ -27,9 +27,9 @@ export function CerebroLanding({ started, onStart, transition }: CerebroLandingP
         className="text-4xl sm:text-5xl font-bold tracking-tight"
       >
         {started ? (
-          <>DNA <span className="text-primary glow-text">Scanner</span></>
+          <><span className="glow-text">DNA</span> <span className="text-primary glow-text">Scanner</span></>
         ) : (
-          <span className="text-primary glow-text">Cerebro</span>
+          <span className="text-primary glow-text">X-Gene Detector</span>
         )}
       </motion.h1>
 
@@ -38,8 +38,8 @@ export function CerebroLanding({ started, onStart, transition }: CerebroLandingP
         className={`text-muted-foreground max-w-lg mx-auto ${started ? 'text-base' : 'text-lg'}`}
       >
         {started
-          ? 'Analyze DNA sequences to detect mutant genes. Powered by Cerebro\'s detection algorithm.'
-          : 'Magneto\'s mutant detection system. Analyze DNA sequences to identify mutant genes hidden in the human genome.'
+          ? 'Analyze DNA sequences to detect mutant genes. Powered by the X-Gene detection algorithm.'
+          : 'Magneto\'s mutant detection system. Analyze DNA sequences to identify the X-Gene hidden in the human genome.'
         }
       </motion.p>
 
@@ -48,7 +48,7 @@ export function CerebroLanding({ started, onStart, transition }: CerebroLandingP
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           initial={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.6, delay: 1.8 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
           className="pt-4"
         >
           <Button

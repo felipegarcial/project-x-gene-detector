@@ -5,7 +5,7 @@ const SEGMENT_COUNT = 5
 const GAP_DEG = 8
 const SEG_LENGTH = (360 - SEGMENT_COUNT * GAP_DEG) / SEGMENT_COUNT
 
-interface CerebroColors {
+interface HeroColors {
   primary: string
   secondary: string
 }
@@ -16,7 +16,7 @@ interface Segment {
   color: string
 }
 
-function getHeroColors(): CerebroColors {
+function getHeroColors(): HeroColors {
   const style = getComputedStyle(document.documentElement)
   return {
     primary: style.getPropertyValue('--color-hero').trim() || '#d946ef',
@@ -24,7 +24,7 @@ function getHeroColors(): CerebroColors {
   }
 }
 
-export function useCerebroAnimation() {
+export function useXGeneAnimation() {
   const svgRef = useRef<SVGSVGElement>(null)
   const colors = useMemo(() => getHeroColors(), [])
 

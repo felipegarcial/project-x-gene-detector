@@ -127,7 +127,7 @@
     }
 }
 
-/* Cerebro glassmorphism card */
+/* X-Gene glassmorphism card */
 .glass-card {
   background: color-mix(in oklch, var(--color-hero-secondary) 8%, oklch(0.14 0 0) 92%);
   backdrop-filter: blur(12px);
@@ -151,6 +151,7 @@
   text-shadow: 0 0 12px color-mix(in srgb, var(--color-hero) 50%, transparent),
                0 0 40px color-mix(in srgb, var(--color-hero) 25%, transparent);
 }
+
 
 /* Subtle dot pattern background */
 .bg-grid {

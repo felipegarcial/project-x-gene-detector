@@ -1,4 +1,4 @@
-import { useCerebroAnimation } from './hooks/useCerebroAnimation'
+import { useXGeneAnimation } from './hooks/useXGeneAnimation'
 
 const CX = 200
 const CY = 200
@@ -20,12 +20,12 @@ function arcProps(r: number, startDeg: number, lengthDeg: number) {
   }
 }
 
-interface CerebroHeroProps {
+interface XGeneHeroProps {
   className?: string
 }
 
-export function CerebroHero({ className = 'w-64 h-64 sm:w-80 sm:h-80' }: CerebroHeroProps) {
-  const { svgRef, colors, segments } = useCerebroAnimation()
+export function XGeneHero({ className = 'w-64 h-64 sm:w-80 sm:h-80' }: XGeneHeroProps) {
+  const { svgRef, colors, segments } = useXGeneAnimation()
 
   return (
     <div className="flex items-center justify-center">

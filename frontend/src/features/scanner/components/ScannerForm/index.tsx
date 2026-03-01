@@ -45,7 +45,7 @@ export function ScannerForm({
           <div className="flex-1 w-full">
             <DnaInput value={input} onChange={onInputChange} disabled={loading} />
           </div>
-          <div className="flex items-start justify-center md:min-w-[260px]">
+          <div className="flex items-start justify-center w-full md:w-auto md:min-w-[260px]">
             <DnaGrid
               dna={gridDna}
               state={gridState}
@@ -55,7 +55,7 @@ export function ScannerForm({
         </div>
 
         <div className="flex gap-3 justify-end">
-          <Button type="button" variant="outline" onClick={onClear} className="cursor-pointer">
+          <Button type="button" variant="ghost" onClick={onClear} className="cursor-pointer">
             Clear
           </Button>
           <Button type="submit" disabled={!canSubmit} className="cursor-pointer">

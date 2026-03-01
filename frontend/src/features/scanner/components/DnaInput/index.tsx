@@ -4,12 +4,12 @@ interface DnaInputProps {
   disabled?: boolean
 }
 
-const PLACEHOLDER = `ATGCGA
-CAGTGC
-TTATGT
-AGAAGG
-CCCCTA
-TCACTG`
+const PLACEHOLDER = `e.g.  ATGCGA
+      CAGTGC
+      TTATGT
+      AGAAGG
+      CCCCTA
+      TCACTG`
 
 const EXAMPLE_MUTANT = `ATGCGA
 CAGTGC
@@ -26,6 +26,9 @@ GCGTCA
 TCACTG`
 
 export function DnaInput({ value, onChange, disabled }: DnaInputProps) {
+  const isMutantActive = value.trim() === EXAMPLE_MUTANT.trim()
+  const isHumanActive = value.trim() === EXAMPLE_HUMAN.trim()
+
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
@@ -37,7 +40,11 @@ export function DnaInput({ value, onChange, disabled }: DnaInputProps) {
             type="button"
             onClick={() => onChange(EXAMPLE_MUTANT)}
             disabled={disabled}
-            className="text-xs text-primary/70 hover:text-primary transition-colors disabled:opacity-50 cursor-pointer"
+            className={`text-xs font-bold transition-colors disabled:opacity-50 cursor-pointer ${
+              isMutantActive
+                ? 'text-primary'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
           >
             Try Mutant
           </button>
@@ -46,7 +53,11 @@ export function DnaInput({ value, onChange, disabled }: DnaInputProps) {
             type="button"
             onClick={() => onChange(EXAMPLE_HUMAN)}
             disabled={disabled}
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 cursor-pointer"
+            className={`text-xs font-bold transition-colors disabled:opacity-50 cursor-pointer ${
+              isHumanActive
+                ? 'text-primary'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
           >
             Try Human
           </button>

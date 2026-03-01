@@ -9,7 +9,7 @@ export function Header() {
             <div className="w-2 h-2 rounded-full bg-primary" />
           </div>
           <span className="text-sm font-bold tracking-[0.3em] uppercase text-foreground/90">
-            Cerebro
+            Project X-Gene
           </span>
         </Link>
         <nav aria-label="Main navigation" className="flex gap-6">
