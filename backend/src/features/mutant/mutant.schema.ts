@@ -6,6 +6,7 @@ export const dnaSchema = z.object({
   dna: z
     .array(z.string().regex(DNA_BASES, 'DNA strings can only contain A, T, C, G'))
     .min(4, 'DNA matrix must be at least 4x4')
+    .max(1000, 'DNA matrix cannot exceed 1000x1000')
     .refine(
       (dna) => {
         const n = dna.length

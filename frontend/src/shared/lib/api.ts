@@ -1,6 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
-/** Default request timeout (15 seconds) */
 const DEFAULT_TIMEOUT_MS = 15_000
 
 export interface ApiResponse<T> {
@@ -20,10 +19,6 @@ export class ApiError extends Error {
   }
 }
 
-/**
- * Extract a human-readable error message from the API response body.
- * Handles Zod flatten format: { error: { formErrors: [...], fieldErrors: {...} } }
- */
 function extractMessage(status: number, body: unknown): string {
   if (typeof body !== 'object' || body === null || !('error' in body)) {
     return `API error: ${status}`
@@ -31,10 +26,8 @@ function extractMessage(status: number, body: unknown): string {
 
   const error = (body as Record<string, unknown>).error
 
-  // String error message
   if (typeof error === 'string') return error
 
-  // Zod flatten format
   if (typeof error === 'object' && error !== null) {
     const flat = error as { formErrors?: string[]; fieldErrors?: Record<string, string[]> }
 
@@ -52,16 +45,6 @@ function extractMessage(status: number, body: unknown): string {
   return `API error: ${status}`
 }
 
-/**
- * Generic fetch wrapper for the backend API.
- *
- * - Prepends VITE_API_URL to the path
- * - Sets JSON headers (merged with caller-provided headers)
- * - Accepts custom `validStatuses` to treat non-2xx codes as valid (e.g. 403)
- * - Supports AbortSignal for cancellation
- * - Adds a default 15s timeout if no signal is provided
- * - Throws `ApiError` with status and parsed body on unexpected responses
- */
 export async function apiFetch<T>(
   path: string,
   options?: RequestInit & { validStatuses?: number[] },
@@ -69,7 +52,6 @@ export async function apiFetch<T>(
   const { validStatuses, headers: callerHeaders, ...fetchOptions } = options ?? {}
   const allowed = validStatuses ?? []
 
-  // If no signal provided, add a default timeout
   const signal = fetchOptions.signal ?? AbortSignal.timeout(DEFAULT_TIMEOUT_MS)
 
   const response = await fetch(`${API_URL}${path}`, {

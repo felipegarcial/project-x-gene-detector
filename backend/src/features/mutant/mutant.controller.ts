@@ -6,7 +6,6 @@ import { mutantRepository } from './mutant.repository.js'
 
 export const mutantController = {
   async check(req: Request, res: Response) {
-    // Validate input
     const result = dnaSchema.safeParse(req.body)
     if (!result.success) {
       res.status(400).json({ error: result.error.flatten() })
@@ -15,25 +14,20 @@ export const mutantController = {
 
     const { dna } = result.data
 
-    // Hash the DNA to check for duplicates
     const dnaHash = crypto
       .createHash('sha256')
       .update(dna.join(','))
       .digest('hex')
 
-    // Run detection (always run to get sequences, even for cached DNAs)
     const { is_mutant, sequences } = isMutant(dna)
 
-    // Check if already analyzed — only insert if new
-    const existing = await mutantRepository.findByHash(dnaHash)
-    if (!existing) {
-      await mutantRepository.insert({
-        dna_hash: dnaHash,
-        dna_sequence: dna,
-        is_mutant,
-      })
-    }
+    await mutantRepository.upsert({
+      dna_hash: dnaHash,
+      dna_sequence: dna,
+      is_mutant,
+    })
 
+    // Per challenge spec: 200 = mutant, 403 = human
     res.status(is_mutant ? 200 : 403).json({
       is_mutant,
       sequences,

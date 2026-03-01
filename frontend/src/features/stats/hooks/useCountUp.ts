@@ -1,15 +1,16 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 
-/** Animate a number from 0 to target with ease-out cubic. */
 export function useCountUp(target: number, duration = 600) {
-  const [display, setDisplay] = useState(0)
+  const prefersReduced = useMemo(
+    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    [],
+  )
+
+  const [display, setDisplay] = useState(prefersReduced ? target : 0)
   const frameRef = useRef(0)
 
   useEffect(() => {
-    // Respect reduced motion preference
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReduced) {
-      setDisplay(target)
       return
     }
 
@@ -17,7 +18,6 @@ export function useCountUp(target: number, duration = 600) {
     function tick(now: number) {
       const elapsed = now - start
       const progress = Math.min(elapsed / duration, 1)
-      // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3)
       setDisplay(Math.round(eased * target))
       if (progress < 1) {
@@ -26,7 +26,7 @@ export function useCountUp(target: number, duration = 600) {
     }
     frameRef.current = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frameRef.current)
-  }, [target, duration])
+  }, [target, duration, prefersReduced])
 
-  return display
+  return prefersReduced ? target : display
 }

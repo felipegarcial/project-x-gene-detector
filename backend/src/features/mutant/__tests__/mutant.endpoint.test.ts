@@ -6,7 +6,7 @@ import { app } from '../../../app.js'
 vi.mock('../../mutant/mutant.repository.js', () => ({
   mutantRepository: {
     findByHash: vi.fn().mockResolvedValue(null),
-    insert: vi.fn().mockResolvedValue({}),
+    upsert: vi.fn().mockResolvedValue({}),
   },
 }))
 

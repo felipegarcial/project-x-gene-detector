@@ -1,42 +1,21 @@
-import { useMemo } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import type { SequenceCoords, GridState } from '../scanner.types'
+import type { SequenceCoords, GridState } from '../../scanner.types'
+import { useDnaGridHighlight } from './hooks/useDnaGridHighlight'
 
 interface DnaGridProps {
-  /** Current DNA rows (can be empty or partial) */
   dna: string[]
-  /** Grid display state */
   state: GridState
-  /** Sequence coordinates from the API (only used in 'result' state) */
   sequences?: SequenceCoords[]
 }
 
 const DUMMY_SIZE = 6
 
-/**
- * DNA Matrix Grid with 4 visual states:
- * - empty: grey placeholder cells (no letters)
- * - preview: cells filled with DNA bases as user types
- * - scanning: pulsing/sweeping animation while API processes
- * - result: highlighted sequence cells, rest muted
- */
 export function DnaGrid({ dna, state, sequences = [] }: DnaGridProps) {
   const n = state === 'empty' ? DUMMY_SIZE : dna.length || DUMMY_SIZE
   const isEmpty = state === 'empty' || dna.length === 0
 
-  // Build highlighted set for result state
-  const highlightedCells = useMemo(() => {
-    if (state !== 'result') return new Set<string>()
-    const set = new Set<string>()
-    for (const seq of sequences) {
-      for (const [r, c] of seq) {
-        set.add(`${r},${c}`)
-      }
-    }
-    return set
-  }, [state, sequences])
+  const highlightedCells = useDnaGridHighlight(state, sequences)
 
-  // Build rows: either real DNA or dummy empty rows
   const rows: (string | null)[][] = isEmpty
     ? Array.from({ length: DUMMY_SIZE }, () => Array(DUMMY_SIZE).fill(null))
     : dna.map((row) => row.split(''))
@@ -86,14 +65,12 @@ interface CellProps {
 function Cell({ base, state, isHighlighted, index }: CellProps) {
   const delay = index * 0.015
 
-  // Empty state: muted placeholder
   if (state === 'empty' || base === null) {
     return (
       <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-sm border border-border/15 bg-card/10" />
     )
   }
 
-  // Scanning state: sweep animation
   if (state === 'scanning') {
     return (
       <motion.div
@@ -112,7 +89,6 @@ function Cell({ base, state, isHighlighted, index }: CellProps) {
     )
   }
 
-  // Result state: highlighted vs muted
   if (state === 'result') {
     return (
       <motion.div
@@ -137,7 +113,6 @@ function Cell({ base, state, isHighlighted, index }: CellProps) {
     )
   }
 
-  // Preview state: filled but neutral
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.5 }}

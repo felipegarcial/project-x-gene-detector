@@ -1,4 +1,4 @@
-import type { MutantResponse } from '../scanner.types'
+import type { MutantResponse } from '../../scanner.types'
 
 interface ScannerResultProps {
   result: MutantResponse

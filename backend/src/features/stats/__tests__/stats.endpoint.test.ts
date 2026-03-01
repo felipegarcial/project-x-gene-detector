@@ -2,7 +2,6 @@ import { describe, it, expect, vi } from 'vitest'
 import request from 'supertest'
 import { app } from '../../../app.js'
 
-// Mock the stats repository
 vi.mock('../../stats/stats.repository.js', () => ({
   statsRepository: {
     countMutants: vi.fn(),
@@ -10,11 +9,10 @@ vi.mock('../../stats/stats.repository.js', () => ({
   },
 }))
 
-// Also mock mutant repository since app imports both routes
 vi.mock('../../mutant/mutant.repository.js', () => ({
   mutantRepository: {
     findByHash: vi.fn().mockResolvedValue(null),
-    insert: vi.fn().mockResolvedValue({}),
+    upsert: vi.fn().mockResolvedValue({}),
   },
 }))
 

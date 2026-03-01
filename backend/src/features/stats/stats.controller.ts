@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express'
 import { statsRepository } from './stats.repository.js'
+import type { StatsResponse } from '../../shared/types/index.js'
 
 export const statsController = {
   async getStats(_req: Request, res: Response) {
@@ -10,10 +11,12 @@ export const statsController = {
 
     const ratio = countHuman === 0 ? 0 : countMutant / countHuman
 
-    res.json({
+    const response: StatsResponse = {
       count_mutant_dna: countMutant,
       count_human_dna: countHuman,
-      ratio: Math.round(ratio * 10) / 10,
-    })
+      ratio: parseFloat(ratio.toFixed(2)),
+    }
+
+    res.json(response)
   },
 }

@@ -1,9 +1,13 @@
 import { Button } from '@/shared/components/ui/button'
 import { StatCard } from './components'
-import { useStats } from './hooks'
+import { useStats, useCountUp } from './hooks'
 
 export default function StatsPage() {
   const { stats, error, loading, total, retry } = useStats()
+
+  const mutantDisplay = useCountUp(stats?.count_mutant_dna ?? 0)
+  const humanDisplay = useCountUp(stats?.count_human_dna ?? 0)
+  const ratioDisplay = useCountUp(stats?.ratio ?? 0)
 
   if (loading) {
     return (
@@ -43,9 +47,9 @@ export default function StatsPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard label="Mutant DNA" value={stats.count_mutant_dna} accent="primary" />
-        <StatCard label="Human DNA" value={stats.count_human_dna} accent="secondary" />
-        <StatCard label="Ratio" value={stats.ratio} />
+        <StatCard label="Mutant DNA" displayValue={mutantDisplay} accent="primary" />
+        <StatCard label="Human DNA" displayValue={humanDisplay} accent="secondary" />
+        <StatCard label="Ratio" displayValue={ratioDisplay} />
       </div>
 
       <p className="text-sm text-muted-foreground text-center">

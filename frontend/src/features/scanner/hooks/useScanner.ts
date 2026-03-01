@@ -1,27 +1,15 @@
 import { useState, useMemo, useCallback, useRef } from 'react'
-import { analyzeDna } from '../scanner.service'
+import { analyzeDna } from '../services'
 import type { MutantResponse, GridState } from '../scanner.types'
 
-/** Maximum DNA matrix size (NxN) to prevent UI freezing */
 const MAX_DNA_SIZE = 20
 
-/**
- * Normalize raw user input into a formatted DNA matrix (one row per line).
- *
- * Supports multiple input formats:
- * - One row per line: "ATGCGA\nCAGTGC\n..."
- * - JSON array: ["ATGCGA","CAGTGC",...] (with or without newlines)
- * - Comma-separated: ATGCGA,CAGTGC,... or "ATGCGA","CAGTGC",...
- * - Space-separated: ATGCGA CAGTGC TTATGT ...
- * - Continuous string: ATGCGACAGTGCTTATGT... (split by sqrt for NxN)
- */
 function normalizeInput(raw: string): string {
   const trimmed = raw.trim()
   if (!trimmed) return ''
 
   const upper = trimmed.toUpperCase()
 
-  // 1. JSON array — collapse newlines first so pasted multi-line JSON works
   const collapsed = upper.replace(/\s+/g, '')
   if (collapsed.startsWith('[') && collapsed.endsWith(']')) {
     try {
@@ -32,12 +20,10 @@ function normalizeInput(raw: string): string {
     } catch { /* not valid JSON, continue */ }
   }
 
-  // 2. Already has newlines — user is typing line by line, don't interfere
   if (raw.includes('\n')) {
     return raw
   }
 
-  // 3. Comma-separated (with or without quotes/spaces)
   if (upper.includes(',')) {
     const parts = upper
       .split(',')
@@ -49,7 +35,6 @@ function normalizeInput(raw: string): string {
     }
   }
 
-  // 4. Space-separated: "ATGCGA CAGTGC TTATGT ..."
   if (upper.includes(' ')) {
     const parts = upper
       .split(/\s+/)
@@ -61,7 +46,6 @@ function normalizeInput(raw: string): string {
     }
   }
 
-  // 5. Continuous string: extract only DNA chars, split by sqrt(length)
   const dnaOnly = upper.replace(/[^ATCG]/g, '')
   if (dnaOnly.length >= 16) {
     const n = Math.sqrt(dnaOnly.length)
@@ -79,10 +63,6 @@ function normalizeInput(raw: string): string {
 
 const DNA_BASES = /^[ATCG]+$/
 
-/**
- * Validate a parsed DNA array before sending to the API.
- * Returns an error message string, or null if valid.
- */
 function validateDna(dna: string[]): string | null {
   if (dna.length === 0) return null // empty is not an error, just nothing to show
   if (dna.length < 4) return 'DNA matrix must be at least 4x4'
@@ -101,16 +81,11 @@ function validateDna(dna: string[]): string | null {
   return null
 }
 
-/**
- * Parse the textarea value into an array of DNA strings for the API.
- * Strips brackets, quotes, commas, and whitespace so users can paste
- * JSON arrays, comma-separated values, or plain lines interchangeably.
- */
 function parseDna(raw: string): string[] {
   return raw
     .trim()
     .split('\n')
-    .map((line) => line.replace(/[\[\]"',\s]/g, '').toUpperCase())
+    .map((line) => line.replace(/[[\]"',\s]/g, '').toUpperCase())
     .filter((line) => line.length > 0)
 }
 
@@ -121,7 +96,6 @@ export function useScanner() {
   const [loading, setLoading] = useState(false)
   const [dna, setDna] = useState<string[]>([])
 
-  // Track in-flight request for cancellation (double-click protection)
   const abortRef = useRef<AbortController | null>(null)
 
   const handleInput = useCallback((value: string) => {
@@ -130,7 +104,6 @@ export function useScanner() {
     setError(null)
   }, [])
 
-  // Combined live validation + preview DNA (single parse, single validate)
   const { liveValidation, previewDna } = useMemo(() => {
     const parsed = parseDna(input)
     if (parsed.length === 0) return { liveValidation: null, previewDna: [] as string[] }
@@ -158,7 +131,6 @@ export function useScanner() {
       return
     }
 
-    // Cancel any previous in-flight request
     abortRef.current?.abort()
     const controller = new AbortController()
     abortRef.current = controller
@@ -191,7 +163,6 @@ export function useScanner() {
 
   const canSubmit = !loading && input.trim().length > 0 && !liveValidation
 
-  // Grid state machine: empty → preview → scanning → result
   const gridState: GridState = result
     ? 'result'
     : loading

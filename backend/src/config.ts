@@ -12,3 +12,18 @@ export const DEFAULTS = {
   SEQUENCE_LENGTH: 4,
   MIN_SEQUENCES_FOR_MUTANT: 2,
 }
+
+export function validateConfig(): void {
+  const required: Array<[string, string]> = [
+    ['SUPABASE_URL', CONFIG.SUPABASE_URL],
+    ['SUPABASE_ANON_KEY', CONFIG.SUPABASE_ANON_KEY],
+  ]
+
+  const missing = required.filter(([, value]) => !value).map(([key]) => key)
+
+  if (missing.length > 0) {
+    throw new Error(
+      `Missing required environment variables: ${missing.join(', ')}. Check your .env file.`
+    )
+  }
+}

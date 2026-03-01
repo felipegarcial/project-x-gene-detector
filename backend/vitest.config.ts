@@ -14,6 +14,7 @@ export default defineConfig({
         'src/shared/lib/db/**',
         'src/shared/types/**',
         'src/**/*.repository.ts',
+        'src/server.ts',
       ],
     },
   },

@@ -1,7 +1,7 @@
 {
-  "name": "rental",
+  "name": "magneto-corp",
   "version": "1.0.0",
-  "description": "Mutant DNA Detector - Technical Test",
+  "description": "Mutant DNA Detector",
   "type": "module",
   "workspaces": [
     "frontend",

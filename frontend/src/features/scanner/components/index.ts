@@ -1,5 +1,6 @@
-export { CerebroHero } from './CerebroHero'
+export { CerebroLanding } from './CerebroLanding'
 export { DnaInput } from './DnaInput'
 export { DnaGrid } from './DnaGrid'
+export { ScannerForm } from './ScannerForm'
 export { ScannerResult } from './ScannerResult'
 export { ScannerSessionProvider } from './ScannerSessionProvider'

@@ -1,8 +1,6 @@
-import { useCountUp } from '../hooks'
-
 interface StatCardProps {
   label: string
-  value: number
+  displayValue: number
   accent?: 'primary' | 'secondary' | 'default'
 }
 
@@ -18,14 +16,12 @@ const VALUE_STYLES = {
   default: 'text-foreground',
 }
 
-export function StatCard({ label, value, accent = 'default' }: StatCardProps) {
-  const display = useCountUp(value)
-
+export function StatCard({ label, displayValue, accent = 'default' }: StatCardProps) {
   return (
     <div className={`glass-card rounded-lg px-5 py-6 shadow-lg ${ACCENT_STYLES[accent]}`}>
       <p className="text-sm text-muted-foreground">{label}</p>
       <p className={`text-4xl font-bold mt-2 tracking-tight tabular-nums ${VALUE_STYLES[accent]}`}>
-        {display}
+        {displayValue}
       </p>
     </div>
   )

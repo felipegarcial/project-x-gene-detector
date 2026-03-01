@@ -1,12 +1,7 @@
 import { apiFetch } from '@/shared/lib/api'
-import type { MutantResponse } from './scanner.types'
+import type { MutantResponse } from '../scanner.types'
 
-/**
- * Analyze a DNA sequence to detect if it belongs to a mutant.
- *
- * The API returns 200 for mutants and 403 for humans — both are valid results,
- * so we pass 403 as an accepted status to avoid throwing.
- */
+// 403 is a valid response (human DNA), not an error
 export async function analyzeDna(
   dna: string[],
   options?: { signal?: AbortSignal },

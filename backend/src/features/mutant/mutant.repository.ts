@@ -13,10 +13,10 @@ export const mutantRepository = {
     return data
   },
 
-  async insert(record: Omit<DnaRecord, 'id' | 'created_at'>): Promise<DnaRecord> {
+  async upsert(record: Omit<DnaRecord, 'id' | 'created_at'>): Promise<DnaRecord> {
     const { data, error } = await getDb()
       .from('dna_records')
-      .insert(record)
+      .upsert(record, { onConflict: 'dna_hash' })
       .select()
       .single()
 
