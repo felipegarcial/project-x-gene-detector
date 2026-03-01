@@ -1,8 +1,20 @@
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
+import { motion } from 'motion/react'
+import { useScannerSession } from '@/features/scanner/hooks/useScannerSession'
 
 export function Header() {
+  const { started } = useScannerSession()
+  const { pathname } = useLocation()
+
+  const visible = started || pathname !== '/'
+
   return (
-    <header className="border-b border-border/50 bg-background sticky top-0 z-50">
+    <motion.header
+      initial={false}
+      animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : -20 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+      className={`border-b border-border/50 bg-background sticky top-0 z-50 ${!visible ? 'pointer-events-none' : ''}`}
+    >
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 group">
           <div className="w-6 h-6 rounded-full border-2 border-primary/60 flex items-center justify-center group-hover:border-primary transition-colors">
@@ -31,6 +43,6 @@ export function Header() {
           </NavLink>
         </nav>
       </div>
-    </header>
+    </motion.header>
   )
 }
