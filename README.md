@@ -2,6 +2,8 @@
 
 Full-stack application that analyzes DNA sequences to detect mutant gene patterns. Built with React 19, Express 5, and Supabase.
 
+Organized with a **feature-based architecture** where each domain (DNA analysis, statistics) is fully self-contained with its own routes, controllers, services, and repositories — designed to be extracted into independent microservices if scaling demands require it.
+
 ## Table of Contents
 
 - [Quick Start](#quick-start)
@@ -11,20 +13,20 @@ Full-stack application that analyzes DNA sequences to detect mutant gene pattern
 - [Algorithm](#algorithm)
 - [Scaling Architecture](#scaling-architecture)
 - [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
 
 ## Quick Start
 
 ### Prerequisites
 
-- Node.js >= 22
-- npm >= 10
-- A [Supabase](https://supabase.com) project
+- [Node.js](https://nodejs.org) >= 22
+- [npm](https://www.npmjs.com) >= 10
+- A [Supabase](https://supabase.com) project with a `dna_records` table ([see schema below](#database))
 
 ### Setup
 
 ```bash
-git clone <repo-url> && cd project-x-gene-detector
+git clone https://github.com/felipegarcial/project-x-gene-detector.git
+cd project-x-gene-detector
 npm install
 ```
 
@@ -51,13 +53,22 @@ cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 ```
 
-Fill in your Supabase credentials in `backend/.env`:
+Fill in `backend/.env`:
 
 ```
-PORT=3001
+# Required
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_ANON_KEY=your-anon-key
+
+# Optional (defaults shown)
+PORT=3001
 CORS_ORIGINS=
+```
+
+Fill in `frontend/.env`:
+
+```
+VITE_API_URL=http://localhost:3001
 ```
 
 ### Run
@@ -139,12 +150,11 @@ npm run test:integration --workspace=backend
 ## Architecture
 
 ```
-┌─────────────────┐       ┌─────────────────────┐       ┌──────────────┐
-│                  │       │                      │       │              │
-│  React Frontend  │──────▶│  Express REST API    │──────▶│   Supabase   │
-│  (Vite + TW)     │ HTTP  │  (Node.js + TS)      │  SQL  │  (PostgreSQL)│
-│                  │◀──────│                      │◀──────│              │
-└─────────────────┘       └─────────────────────┘       └──────────────┘
+┌──────────────┐         ┌──────────────────┐         ┌──────────────┐
+│    React     │  HTTP   │  Express REST API │   SQL   │   Supabase   │
+│   Frontend   │────────▶│  (Node.js + TS)  │────────▶│ (PostgreSQL) │
+│  Vite + TW   │◀────────│                  │◀────────│              │
+└──────────────┘         └──────────────────┘         └──────────────┘
 ```
 
 **Backend layers:** `route → controller → service → repository`
@@ -174,62 +184,6 @@ Key design choices:
 
 Architecture designed to handle **traffic fluctuations from 100 to 1,000,000 requests per second** on AWS.
 
-### Request Flows
-
-**Frontend (static assets):**
-
-```
-Client → Route 53 → CloudFront → S3
-```
-
-**DNA Analysis (write path):**
-
-```
-Client → Route 53 → WAF → ALB → Fargate /mutant/* → Redis (cache check)
-                                       │                    │
-                                       │              cache hit → respond
-                                       │
-                                       └→ isMutant() → Redis (cache write) → SQS → respond
-                                                                               │
-                                                              SQS Consumer → RDS Proxy → Aurora Write
-                                                              (batch INSERT 500 rows)
-```
-
-**Statistics (read path):**
-
-```
-Client → Route 53 → WAF → ALB → Fargate /stats/* → Redis (5s TTL cache)
-                                                         │
-                                                   cache miss → RDS Proxy → Aurora Read
-```
-
-### Design Decisions
-
-| Decision | Rationale |
-|----------|-----------|
-| **ECS Fargate** over Lambda | Avoids cold starts at sustained high throughput. Fargate tasks are always warm. |
-| **Separate /mutant/ and /stats/ services** | Resource isolation — write-heavy DNA analysis doesn't compete with read-heavy stats queries. Independent scaling. |
-| **ElastiCache Redis** as first-line cache | Absorbs 99%+ of reads. At 1M req/s, most DNA has already been analyzed. Redis handles 100K-200K ops/s per shard. |
-| **Redis cluster with 6–12 shards and read replicas** | At 1M req/s with ~2M Redis ops/s (cache check + write), 6–12 shards provide sufficient throughput. Read replicas across AZs for high availability. |
-| **Amazon SQS** for async writes | Decouples the HTTP response from database persistence. Client gets 200/403 immediately; the write happens asynchronously. |
-| **Batch writes (500 rows/batch)** | Converts ~1M individual inserts/s into ~2K bulk inserts/s. Aurora can handle this comfortably. |
-| **RDS Proxy** | Connection pooling — prevents hundreds of Fargate tasks from each holding a direct database connection. Reduces Aurora failover time from ~30s to ~1s. |
-| **Aurora PostgreSQL** over standard RDS | Distributed storage layer, automatic failover, auto-scaling read replicas. Up to 5x throughput of standard PostgreSQL. |
-| **WAF** over API Gateway | API Gateway has a 10K req/s default limit and would cost ~$300K/day at 1M req/s. WAF + ALB handles the scale natively at a fraction of the cost. |
-| **VPC Endpoints** over NAT Gateway | Private connectivity to AWS services (ECR, SQS, CloudWatch, Secrets Manager) without internet routing. Lower latency, lower cost, no throughput bottleneck. |
-| **Multi-AZ** (2 availability zones) | High availability — if one datacenter fails, the other continues serving traffic. ALB, Fargate, Redis, and Aurora are all distributed across AZs. |
-| **Auto Scaling on all Fargate services** | Dynamic task count based on CPU utilization and request load. Scales from tens of tasks to hundreds in minutes. |
-
-### Scaling Estimates
-
-| Component | Low traffic | 1M req/s | Scaling metric |
-|-----------|------------|----------|----------------|
-| Fargate `/mutant/*` | ~50 tasks | ~500 tasks | CPU > 60%, requests/target |
-| Fargate `/stats/*` | ~10 tasks | ~50 tasks | CPU > 60% |
-| Fargate SQS Consumer | ~5 tasks | ~50 tasks | Queue depth > 1000 messages |
-| ElastiCache Redis | 6 shards | 12 shards | Memory and ops/s per shard |
-| Aurora Read Replicas | 1 replica | 2–4 replicas | CPU > 60% |
-
 ## Tech Stack
 
 | Layer    | Technology                                          |
@@ -239,32 +193,3 @@ Client → Route 53 → WAF → ALB → Fargate /stats/* → Redis (5s TTL cache
 | Database | Supabase (PostgreSQL) with upsert + SHA-256 hashing |
 | Testing  | Vitest, Supertest, Testing Library                  |
 | Monorepo | npm workspaces                                      |
-
-## Project Structure
-
-```
-├── backend/
-│   └── src/
-│       ├── features/
-│       │   ├── mutant/          # DNA analysis (route, controller, service, repository, schema)
-│       │   └── stats/           # Statistics (route, controller, service, repository)
-│       ├── shared/
-│       │   ├── lib/             # Database client, logger
-│       │   ├── middlewares/     # CORS, request logging, rate limiting
-│       │   └── types/          # Shared interfaces
-│       ├── app.ts              # Express app (middleware + routes)
-│       ├── server.ts           # Server entry point
-│       └── config.ts           # Environment validation
-├── frontend/
-│   └── src/
-│       ├── features/
-│       │   ├── scanner/         # DNA input, grid visualization, analysis
-│       │   └── stats/           # Statistics dashboard, donut chart
-│       └── shared/
-│           ├── components/      # Header, ErrorBoundary, NotFound
-│           ├── lib/             # API client
-│           └── utils/           # Utilities (cn)
-├── docs/
-│   └── scaling-architecture.pdf # AWS architecture diagram (1M req/s)
-└── package.json                 # Monorepo root (npm workspaces)
-```
