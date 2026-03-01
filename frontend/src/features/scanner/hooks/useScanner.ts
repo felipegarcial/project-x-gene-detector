@@ -4,7 +4,7 @@ import type { MutantResponse, GridState } from '../scanner.types'
 
 const MAX_DNA_SIZE = 20
 
-function normalizeInput(raw: string): string {
+export function normalizeInput(raw: string): string {
   const trimmed = raw.trim()
   if (!trimmed) return ''
 
@@ -63,7 +63,7 @@ function normalizeInput(raw: string): string {
 
 const DNA_BASES = /^[ATCG]+$/
 
-function validateDna(dna: string[]): string | null {
+export function validateDna(dna: string[]): string | null {
   if (dna.length === 0) return null // empty is not an error, just nothing to show
   if (dna.length < 4) return 'DNA matrix must be at least 4x4'
   if (dna.length > MAX_DNA_SIZE) return `DNA matrix cannot exceed ${MAX_DNA_SIZE}x${MAX_DNA_SIZE}`
@@ -81,7 +81,7 @@ function validateDna(dna: string[]): string | null {
   return null
 }
 
-function parseDna(raw: string): string[] {
+export function parseDna(raw: string): string[] {
   return raw
     .trim()
     .split('\n')
