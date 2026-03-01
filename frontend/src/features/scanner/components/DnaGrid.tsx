@@ -1,31 +1,30 @@
+import { useMemo } from 'react'
 import { motion } from 'motion/react'
+import type { SequenceCoords } from '../scanner.types'
 
 interface DnaGridProps {
   dna: string[]
-  isMutant: boolean
-}
-
-const BASE_COLORS: Record<string, string> = {
-  A: 'text-teal-400 border-teal-500/40',
-  T: 'text-cyan-400 border-cyan-500/40',
-  C: 'text-violet-400 border-violet-500/40',
-  G: 'text-amber-400 border-amber-500/40',
-}
-
-const BASE_GLOW: Record<string, string> = {
-  A: 'shadow-teal-500/30',
-  T: 'shadow-cyan-500/30',
-  C: 'shadow-violet-500/30',
-  G: 'shadow-amber-500/30',
+  sequences: SequenceCoords[]
 }
 
 /**
  * Visual DNA matrix grid with animated base cells.
- * Each cell shows the base letter with a color-coded accent.
- * On mutant detection, cells animate in with a stagger effect.
+ * Only cells belonging to detected sequences are highlighted.
+ * Non-sequence cells render in a muted, neutral style.
  */
-export function DnaGrid({ dna, isMutant }: DnaGridProps) {
+export function DnaGrid({ dna, sequences }: DnaGridProps) {
   const n = dna.length
+
+  // Build a Set of "row,col" keys for O(1) lookup
+  const highlightedCells = useMemo(() => {
+    const set = new Set<string>()
+    for (const seq of sequences) {
+      for (const [r, c] of seq) {
+        set.add(`${r},${c}`)
+      }
+    }
+    return set
+  }, [sequences])
 
   return (
     <div className="flex flex-col items-center gap-1">
@@ -33,8 +32,7 @@ export function DnaGrid({ dna, isMutant }: DnaGridProps) {
         <div key={rowIdx} className="flex gap-1">
           {row.split('').map((base, colIdx) => {
             const delay = (rowIdx * n + colIdx) * 0.02
-            const color = BASE_COLORS[base] ?? 'text-muted-foreground border-border'
-            const glow = isMutant ? (BASE_GLOW[base] ?? '') : ''
+            const isHighlighted = highlightedCells.has(`${rowIdx},${colIdx}`)
 
             return (
               <motion.div
@@ -49,9 +47,10 @@ export function DnaGrid({ dna, isMutant }: DnaGridProps) {
                 className={`
                   w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center
                   rounded-sm border font-mono text-xs sm:text-sm font-bold
-                  bg-card/50 backdrop-blur-sm
-                  ${color}
-                  ${isMutant ? `shadow-md ${glow}` : ''}
+                  ${isHighlighted
+                    ? 'border-primary/60 bg-primary/20 text-primary shadow-md shadow-primary/20'
+                    : 'border-border/30 bg-card/30 text-muted-foreground/50'
+                  }
                 `}
               >
                 {base}

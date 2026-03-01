@@ -15,7 +15,7 @@ describe('POST /mutant', () => {
     vi.clearAllMocks()
   })
 
-  it('should return 200 for a mutant DNA', async () => {
+  it('should return 200 for a mutant DNA with sequences', async () => {
     const response = await request(app)
       .post('/mutant')
       .send({
@@ -24,9 +24,11 @@ describe('POST /mutant', () => {
 
     expect(response.status).toBe(200)
     expect(response.body.is_mutant).toBe(true)
+    expect(response.body.sequences).toBeDefined()
+    expect(response.body.sequences.length).toBeGreaterThanOrEqual(2)
   })
 
-  it('should return 403 for a human DNA', async () => {
+  it('should return 403 for a human DNA with sequences', async () => {
     const response = await request(app)
       .post('/mutant')
       .send({
@@ -35,6 +37,7 @@ describe('POST /mutant', () => {
 
     expect(response.status).toBe(403)
     expect(response.body.is_mutant).toBe(false)
+    expect(response.body.sequences).toBeDefined()
   })
 
   it('should return 400 for invalid input', async () => {

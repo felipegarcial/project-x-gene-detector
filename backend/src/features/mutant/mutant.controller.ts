@@ -21,27 +21,22 @@ export const mutantController = {
       .update(dna.join(','))
       .digest('hex')
 
-    // Check if already analyzed
+    // Run detection (always run to get sequences, even for cached DNAs)
+    const { is_mutant, sequences } = isMutant(dna)
+
+    // Check if already analyzed — only insert if new
     const existing = await mutantRepository.findByHash(dnaHash)
-    if (existing) {
-      res.status(existing.is_mutant ? 200 : 403).json({
-        is_mutant: existing.is_mutant,
+    if (!existing) {
+      await mutantRepository.insert({
+        dna_hash: dnaHash,
+        dna_sequence: dna,
+        is_mutant,
       })
-      return
     }
 
-    // Run detection
-    const result_mutant = isMutant(dna)
-
-    // Store in DB
-    await mutantRepository.insert({
-      dna_hash: dnaHash,
-      dna_sequence: dna,
-      is_mutant: result_mutant,
-    })
-
-    res.status(result_mutant ? 200 : 403).json({
-      is_mutant: result_mutant,
+    res.status(is_mutant ? 200 : 403).json({
+      is_mutant,
+      sequences,
     })
   },
 }

@@ -15,19 +15,22 @@ function normalizeInput(raw: string): string {
   const trimmed = raw.trim().toUpperCase()
   if (!trimmed) return ''
 
-  // Already has newlines — user is typing line by line, don't interfere
-  if (raw.includes('\n')) {
-    return raw
-  }
-
-  // JSON array: ["ATGCGA","CAGTGC",...] or ['ATGCGA','CAGTGC',...]
-  if (trimmed.startsWith('[')) {
+  // JSON array — check BEFORE newline detection because pasting a JSON array
+  // into a textarea may introduce newlines between elements. Collapse to a
+  // single line first so JSON.parse can handle it.
+  const collapsed = trimmed.replace(/\n/g, '')
+  if (collapsed.startsWith('[') && collapsed.endsWith(']')) {
     try {
-      const parsed = JSON.parse(trimmed.replace(/'/g, '"'))
+      const parsed = JSON.parse(collapsed.replace(/'/g, '"'))
       if (Array.isArray(parsed)) {
         return parsed.map((s: string) => String(s).trim().toUpperCase()).join('\n')
       }
     } catch { /* not valid JSON, continue */ }
+  }
+
+  // Already has newlines — user is typing line by line, don't interfere
+  if (raw.includes('\n')) {
+    return raw
   }
 
   // Comma or space separated (with or without quotes):
@@ -85,12 +88,14 @@ function validateDna(dna: string[]): string | null {
 
 /**
  * Parse the textarea value into an array of DNA strings for the API.
+ * Strips brackets, quotes, commas, and whitespace so users can paste
+ * JSON arrays, comma-separated values, or plain lines interchangeably.
  */
 function parseDna(raw: string): string[] {
   return raw
     .trim()
     .split('\n')
-    .map((line) => line.trim().toUpperCase())
+    .map((line) => line.replace(/[\[\]"',\s]/g, '').toUpperCase())
     .filter((line) => line.length > 0)
 }
 

@@ -53,7 +53,7 @@ export default function ScannerPage() {
           <h2 className="text-sm font-medium text-muted-foreground text-center">
             DNA Matrix Visualization
           </h2>
-          <DnaGrid dna={dna} isMutant={result.is_mutant} />
+          <DnaGrid dna={dna} sequences={result.sequences} />
         </div>
       )}
     </div>

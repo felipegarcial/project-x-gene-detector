@@ -7,12 +7,15 @@ describe('isMutant', () => {
   it('should return true for the mutant example from the PDF', () => {
     // Sequences: diagonal A's (col 0 down-right) + horizontal C's (row 4)
     const dna = ['ATGCGA', 'CAGTGC', 'TTATGT', 'AGAAGG', 'CCCCTA', 'TCACTG']
-    expect(isMutant(dna)).toBe(true)
+    const result = isMutant(dna)
+    expect(result.is_mutant).toBe(true)
+    expect(result.sequences.length).toBeGreaterThanOrEqual(2)
   })
 
   it('should return false for the not-mutant example from the PDF', () => {
     const dna = ['ATGCGA', 'CAGTGC', 'TTATTT', 'AGACGG', 'GCGTCA', 'TCACTG']
-    expect(isMutant(dna)).toBe(false)
+    const result = isMutant(dna)
+    expect(result.is_mutant).toBe(false)
   })
 
   // --- Direction-specific tests ---
@@ -26,7 +29,7 @@ describe('isMutant', () => {
       'GCGTCA',
       'TCACTG',
     ]
-    expect(isMutant(dna)).toBe(true)
+    expect(isMutant(dna).is_mutant).toBe(true)
   })
 
   it('should detect mutant with 2 vertical sequences', () => {
@@ -39,7 +42,7 @@ describe('isMutant', () => {
       'CCGTCA',
       'TCACTG',
     ]
-    expect(isMutant(dna)).toBe(true)
+    expect(isMutant(dna).is_mutant).toBe(true)
   })
 
   it('should detect mutant with diagonal down-left sequence + horizontal', () => {
@@ -53,7 +56,7 @@ describe('isMutant', () => {
       'CCCCCA',
       'TCACTG',
     ]
-    expect(isMutant(dna)).toBe(true)
+    expect(isMutant(dna).is_mutant).toBe(true)
   })
 
   // --- Edge cases ---
@@ -68,7 +71,9 @@ describe('isMutant', () => {
       'TGCATC',
       'CTAGTG',
     ]
-    expect(isMutant(dna)).toBe(false)
+    const result = isMutant(dna)
+    expect(result.is_mutant).toBe(false)
+    expect(result.sequences).toHaveLength(1)
   })
 
   it('should handle minimum 4x4 matrix — mutant', () => {
@@ -79,7 +84,7 @@ describe('isMutant', () => {
       'TGTG',
       'GTGT',
     ]
-    expect(isMutant(dna)).toBe(true)
+    expect(isMutant(dna).is_mutant).toBe(true)
   })
 
   it('should handle minimum 4x4 matrix — human', () => {
@@ -90,7 +95,7 @@ describe('isMutant', () => {
       'GTGT',
       'TGTG',
     ]
-    expect(isMutant(dna)).toBe(false)
+    expect(isMutant(dna).is_mutant).toBe(false)
   })
 
   it('should return false when no sequences exist', () => {
@@ -101,7 +106,9 @@ describe('isMutant', () => {
       'TACG',
       'GCAT',
     ]
-    expect(isMutant(dna)).toBe(false)
+    const result = isMutant(dna)
+    expect(result.is_mutant).toBe(false)
+    expect(result.sequences).toHaveLength(0)
   })
 
   it('should handle all identical letters', () => {
@@ -114,7 +121,7 @@ describe('isMutant', () => {
       'AAAAAA',
       'AAAAAA',
     ]
-    expect(isMutant(dna)).toBe(true)
+    expect(isMutant(dna).is_mutant).toBe(true)
   })
 
   it('should respect no-overlap rule', () => {
@@ -129,7 +136,7 @@ describe('isMutant', () => {
       'GCGTCA',
       'TCACTG',
     ]
-    expect(isMutant(dna)).toBe(false)
+    expect(isMutant(dna).is_mutant).toBe(false)
   })
 
   it('should detect sequences at the bottom and right edges', () => {
@@ -143,6 +150,24 @@ describe('isMutant', () => {
       'GCGTCA',
       'CCCCGA',
     ]
-    expect(isMutant(dna)).toBe(true)
+    expect(isMutant(dna).is_mutant).toBe(true)
+  })
+
+  it('should return correct sequence coordinates', () => {
+    const dna = [
+      'AAAATG', // AAAA horizontal at row 0
+      'CCCCTG', // CCCC horizontal at row 1
+      'TGATGT',
+      'AGACGG',
+      'GCGTCA',
+      'TCACTG',
+    ]
+    const result = isMutant(dna)
+    expect(result.is_mutant).toBe(true)
+    expect(result.sequences).toHaveLength(2)
+    // First sequence: AAAA horizontal at row 0
+    expect(result.sequences[0]).toEqual([[0,0],[0,1],[0,2],[0,3]])
+    // Second sequence: CCCC horizontal at row 1
+    expect(result.sequences[1]).toEqual([[1,0],[1,1],[1,2],[1,3]])
   })
 })
