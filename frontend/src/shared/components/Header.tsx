@@ -1,8 +1,8 @@
 import { Link, NavLink } from 'react-router-dom'
 
-export default function Header() {
+export function Header() {
   return (
-    <header className="border-b border-border/50 bg-card/80 backdrop-blur-md sticky top-0 z-50">
+    <header className="border-b border-border/50 bg-background sticky top-0 z-50">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 group">
           <div className="w-6 h-6 rounded-full border-2 border-primary/60 flex items-center justify-center group-hover:border-primary transition-colors">
@@ -12,7 +12,7 @@ export default function Header() {
             Cerebro
           </span>
         </Link>
-        <nav className="flex gap-6">
+        <nav aria-label="Main navigation" className="flex gap-6">
           <NavLink
             to="/"
             className={({ isActive }) =>

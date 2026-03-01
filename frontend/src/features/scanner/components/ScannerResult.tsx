@@ -9,13 +9,15 @@ export function ScannerResult({ result }: ScannerResultProps) {
 
   return (
     <div
+      role="alert"
+      aria-live="polite"
       className={`rounded-lg border px-5 py-4 ${
         isMutant
-          ? 'border-teal-500/40 bg-teal-500/10 glow-teal'
-          : 'border-amber-500/40 bg-amber-500/10'
+           ? 'border-primary/40 bg-primary/10 glow-hero'
+          : 'border-muted-foreground/30 bg-muted/30'
       }`}
     >
-      <p className={`text-lg font-bold ${isMutant ? 'text-teal-400' : 'text-amber-400'}`}>
+      <p className={`text-lg font-bold ${isMutant ? 'text-primary' : 'text-muted-foreground'}`}>
         {isMutant ? 'Mutant Detected' : 'Human — Not a Mutant'}
       </p>
       <p className="text-sm text-muted-foreground mt-1">

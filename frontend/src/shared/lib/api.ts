@@ -1,5 +1,8 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
+/** Default request timeout (15 seconds) */
+const DEFAULT_TIMEOUT_MS = 15_000
+
 export interface ApiResponse<T> {
   data: T
   status: number
@@ -53,25 +56,47 @@ function extractMessage(status: number, body: unknown): string {
  * Generic fetch wrapper for the backend API.
  *
  * - Prepends VITE_API_URL to the path
- * - Sets JSON headers
+ * - Sets JSON headers (merged with caller-provided headers)
  * - Accepts custom `validStatuses` to treat non-2xx codes as valid (e.g. 403)
+ * - Supports AbortSignal for cancellation
+ * - Adds a default 15s timeout if no signal is provided
  * - Throws `ApiError` with status and parsed body on unexpected responses
  */
 export async function apiFetch<T>(
   path: string,
   options?: RequestInit & { validStatuses?: number[] },
 ): Promise<ApiResponse<T>> {
-  const { validStatuses, ...fetchOptions } = options ?? {}
+  const { validStatuses, headers: callerHeaders, ...fetchOptions } = options ?? {}
   const allowed = validStatuses ?? []
 
+  // If no signal provided, add a default timeout
+  const signal = fetchOptions.signal ?? AbortSignal.timeout(DEFAULT_TIMEOUT_MS)
+
   const response = await fetch(`${API_URL}${path}`, {
+    ...fetchOptions,
+    signal,
     headers: {
       'Content-Type': 'application/json',
+      ...(callerHeaders instanceof Headers
+        ? Object.fromEntries(callerHeaders.entries())
+        : Array.isArray(callerHeaders)
+          ? Object.fromEntries(callerHeaders)
+          : callerHeaders),
     },
-    ...fetchOptions,
   })
 
-  const body = await response.json().catch(() => null)
+  const text = await response.text()
+  let body: unknown = null
+
+  if (text) {
+    try {
+      body = JSON.parse(text)
+    } catch {
+      if (response.ok) {
+        throw new ApiError(response.status, { error: 'Invalid JSON response from server' })
+      }
+    }
+  }
 
   if (response.ok || allowed.includes(response.status)) {
     return { data: body as T, status: response.status }

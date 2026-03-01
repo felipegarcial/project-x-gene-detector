@@ -81,37 +81,41 @@
 }
 
 .dark {
-    --background: oklch(0.12 0.008 260);
-    --foreground: oklch(0.94 0.01 200);
-    --card: oklch(0.17 0.012 260);
-    --card-foreground: oklch(0.94 0.01 200);
-    --popover: oklch(0.17 0.012 260);
-    --popover-foreground: oklch(0.94 0.01 200);
-    --primary: oklch(0.75 0.15 180);
-    --primary-foreground: oklch(0.14 0.02 200);
-    --secondary: oklch(0.22 0.015 260);
-    --secondary-foreground: oklch(0.94 0.01 200);
-    --muted: oklch(0.22 0.015 260);
-    --muted-foreground: oklch(0.65 0.03 220);
-    --accent: oklch(0.70 0.12 195);
-    --accent-foreground: oklch(0.14 0.02 200);
+    /* ── Magneto palette (change these to re-theme everything) ── */
+    --color-hero: #d946ef;           /* Magenta / fuchsia */
+    --color-hero-secondary: #a855f7; /* Softer purple */
+
+    --background: #252423;
+    --foreground: oklch(0.82 0.01 80);
+    --card: oklch(0.17 0.012 300);
+    --card-foreground: oklch(0.82 0.01 80);
+    --popover: oklch(0.17 0.012 300);
+    --popover-foreground: oklch(0.82 0.01 80);
+    --primary: oklch(0.70 0.20 330);
+    --primary-foreground: oklch(0.98 0.01 330);
+    --secondary: oklch(0.25 0.06 310);
+    --secondary-foreground: oklch(0.82 0.01 80);
+    --muted: oklch(0.22 0.04 310);
+    --muted-foreground: oklch(0.60 0.01 80);
+    --accent: oklch(0.55 0.18 300);
+    --accent-foreground: oklch(0.90 0.01 80);
     --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(0.30 0.02 220 / 60%);
-    --input: oklch(0.25 0.015 240 / 80%);
-    --ring: oklch(0.70 0.12 190);
-    --chart-1: oklch(0.75 0.15 180);
-    --chart-2: oklch(0.70 0.12 195);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.15 0.01 260);
+    --border: oklch(0.30 0.06 310 / 60%);
+    --input: #252423;
+    --ring: oklch(0.70 0.20 330);
+    --chart-1: oklch(0.70 0.20 330);
+    --chart-2: oklch(0.55 0.18 300);
+    --chart-3: oklch(0.65 0.16 340);
+    --chart-4: oklch(0.45 0.14 295);
+    --chart-5: oklch(0.60 0.18 315);
+    --sidebar: oklch(0.15 0.03 310);
     --sidebar-foreground: oklch(0.94 0.01 200);
-    --sidebar-primary: oklch(0.75 0.15 180);
+    --sidebar-primary: oklch(0.70 0.20 330);
     --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.22 0.015 260);
+    --sidebar-accent: oklch(0.25 0.06 310);
     --sidebar-accent-foreground: oklch(0.94 0.01 200);
-    --sidebar-border: oklch(0.30 0.02 220 / 60%);
-    --sidebar-ring: oklch(0.70 0.12 190);
+    --sidebar-border: oklch(0.30 0.06 310 / 60%);
+    --sidebar-ring: oklch(0.70 0.20 330);
 }
 
 @layer base {
@@ -125,20 +129,40 @@
 
 /* Cerebro glassmorphism card */
 .glass-card {
-  background: oklch(0.17 0.012 260 / 60%);
+  background: color-mix(in oklch, var(--color-hero-secondary) 8%, oklch(0.14 0 0) 92%);
   backdrop-filter: blur(12px);
-  border: 1px solid oklch(0.30 0.02 220 / 40%);
+  border: 1px solid color-mix(in oklch, var(--color-hero-secondary) 15%, transparent 85%);
 }
 
-/* Teal glow effect */
-.glow-teal {
-  box-shadow: 0 0 20px oklch(0.75 0.15 180 / 20%), 0 0 60px oklch(0.75 0.15 180 / 10%);
+/* Primary glow effect */
+.glow-hero {
+  box-shadow: 0 0 20px color-mix(in srgb, var(--color-hero) 25%, transparent),
+              0 0 60px color-mix(in srgb, var(--color-hero) 10%, transparent);
 }
 
-/* Subtle grid background */
+/* Primary button glow */
+.glow-primary {
+  box-shadow: 0 0 16px color-mix(in srgb, var(--color-hero) 35%, transparent),
+              0 0 40px color-mix(in srgb, var(--color-hero) 15%, transparent);
+}
+
+/* Text glow */
+.glow-text {
+  text-shadow: 0 0 12px color-mix(in srgb, var(--color-hero) 50%, transparent),
+               0 0 40px color-mix(in srgb, var(--color-hero) 25%, transparent);
+}
+
+/* Subtle dot pattern background */
 .bg-grid {
-  background-image:
-    linear-gradient(oklch(0.30 0.02 220 / 15%) 1px, transparent 1px),
-    linear-gradient(90deg, oklch(0.30 0.02 220 / 15%) 1px, transparent 1px);
-  background-size: 40px 40px;
+  background-image: radial-gradient(circle, oklch(0.45 0 0 / 18%) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

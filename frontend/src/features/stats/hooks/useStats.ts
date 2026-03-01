@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { fetchStats } from '../stats.service'
 import type { StatsResponse } from '../stats.types'
 
@@ -7,14 +7,32 @@ export function useStats() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetchStats()
-      .then(setStats)
-      .catch((err) => setError(err instanceof Error ? err.message : 'Failed to load stats'))
-      .finally(() => setLoading(false))
+  const load = useCallback((signal?: AbortSignal) => {
+    setLoading(true)
+    setError(null)
+    fetchStats({ signal })
+      .then((data) => {
+        if (!signal?.aborted) setStats(data)
+      })
+      .catch((err) => {
+        if (!signal?.aborted) {
+          setError(err instanceof Error ? err.message : 'Failed to load stats')
+        }
+      })
+      .finally(() => {
+        if (!signal?.aborted) setLoading(false)
+      })
   }, [])
+
+  useEffect(() => {
+    const controller = new AbortController()
+    load(controller.signal)
+    return () => controller.abort()
+  }, [load])
+
+  const retry = useCallback(() => load(), [load])
 
   const total = stats ? stats.count_mutant_dna + stats.count_human_dna : 0
 
-  return { stats, error, loading, total }
+  return { stats, error, loading, total, retry }
 }

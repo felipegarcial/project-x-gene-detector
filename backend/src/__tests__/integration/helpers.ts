@@ -6,9 +6,8 @@ import { hasTestDb } from './setup.js'
  * Wrapper around `describe` that skips the entire suite when
  * test database credentials are not configured.
  */
-export const describeIntegration = hasTestDb
-  ? describe
-  : describe.skip
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const describeIntegration = (hasTestDb ? describe : describe.skip) as any as typeof describe
 
 /**
  * Delete test DNA records by their hashes.
