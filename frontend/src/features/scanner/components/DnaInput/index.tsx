@@ -41,9 +41,7 @@ export function DnaInput({ value, onChange, disabled }: DnaInputProps) {
             onClick={() => onChange(EXAMPLE_MUTANT)}
             disabled={disabled}
             className={`text-xs font-bold transition-colors disabled:opacity-50 cursor-pointer ${
-              isMutantActive
-                ? 'text-primary'
-                : 'text-muted-foreground hover:text-foreground'
+              isMutantActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             Try Mutant
@@ -54,9 +52,7 @@ export function DnaInput({ value, onChange, disabled }: DnaInputProps) {
             onClick={() => onChange(EXAMPLE_HUMAN)}
             disabled={disabled}
             className={`text-xs font-bold transition-colors disabled:opacity-50 cursor-pointer ${
-              isHumanActive
-                ? 'text-primary'
-                : 'text-muted-foreground hover:text-foreground'
+              isHumanActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             Try Human
@@ -74,7 +70,8 @@ export function DnaInput({ value, onChange, disabled }: DnaInputProps) {
         spellCheck={false}
       />
       <p className="text-xs text-muted-foreground mt-1.5">
-        Enter one row per line using only A, T, C, G bases. The matrix must be square (NxN), min 4x4, max 20x20. You can also paste a JSON array or comma separated values.
+        Enter one row per line using only A, T, C, G bases. The matrix must be square (NxN), min
+        4x4, max 20x20. You can also paste a JSON array or comma separated values.
       </p>
     </div>
   )

@@ -46,11 +46,7 @@ export function ScannerForm({
             <DnaInput value={input} onChange={onInputChange} disabled={loading} />
           </div>
           <div className="flex items-start justify-center w-full md:w-auto md:min-w-[260px]">
-            <DnaGrid
-              dna={gridDna}
-              state={gridState}
-              sequences={sequences}
-            />
+            <DnaGrid dna={gridDna} state={gridState} sequences={sequences} />
           </div>
         </div>
 
@@ -71,7 +67,10 @@ export function ScannerForm({
       )}
 
       {error && (
-        <div role="alert" className="rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive mt-4">
+        <div
+          role="alert"
+          className="rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive mt-4"
+        >
           {error}
         </div>
       )}

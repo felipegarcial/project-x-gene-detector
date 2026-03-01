@@ -13,7 +13,7 @@ function hashDna(dna: string[]): string {
  * to avoid collisions with other tests or manual runs.
  */
 const MUTANT_A = ['AAAATC', 'AAAATC', 'AATTGC', 'GTCATA', 'CCCCGT', 'TTGTCA']
-const HUMAN_A  = ['TTGCAA', 'GCATGT', 'AGTCCA', 'CATGAT', 'TGCAGT', 'AGTCCA']
+const HUMAN_A = ['TTGCAA', 'GCATGT', 'AGTCCA', 'CATGAT', 'TGCAGT', 'AGTCCA']
 
 const testHashes = [hashDna(MUTANT_A), hashDna(HUMAN_A)]
 

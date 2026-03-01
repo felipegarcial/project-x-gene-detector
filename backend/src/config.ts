@@ -23,7 +23,7 @@ export function validateConfig(): void {
 
   if (missing.length > 0) {
     throw new Error(
-      `Missing required environment variables: ${missing.join(', ')}. Check your .env file.`
+      `Missing required environment variables: ${missing.join(', ')}. Check your .env file.`,
     )
   }
 }

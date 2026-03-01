@@ -13,7 +13,7 @@ export function ScannerResult({ result }: ScannerResultProps) {
       aria-live="polite"
       className={`rounded-lg border px-5 py-4 ${
         isMutant
-           ? 'border-primary/40 bg-primary/10 glow-hero'
+          ? 'border-primary/40 bg-primary/10 glow-hero'
           : 'border-muted-foreground/30 bg-muted/30'
       }`}
     >

@@ -74,4 +74,13 @@ describe('GET /stats', () => {
       ratio: 2,
     })
   })
+
+  it('should return 503 when database is unavailable', async () => {
+    vi.mocked(statsRepository.countMutants).mockRejectedValue(new Error('DB down'))
+
+    const response = await request(app).get('/stats')
+
+    expect(response.status).toBe(503)
+    expect(response.body.error).toBeDefined()
+  })
 })

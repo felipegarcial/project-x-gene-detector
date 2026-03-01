@@ -76,6 +76,20 @@ describe('POST /mutant', () => {
     expect(response.body.sequences).toBeDefined()
   })
 
+  it('should compute result when cache lookup fails', async () => {
+    vi.mocked(mutantRepository.findByHash).mockRejectedValue(new Error('DB unreachable'))
+
+    const response = await request(app)
+      .post('/mutant')
+      .send({
+        dna: ['ATGCGA', 'CAGTGC', 'TTATGT', 'AGAAGG', 'CCCCTA', 'TCACTG'],
+      })
+
+    expect(response.status).toBe(200)
+    expect(response.body.is_mutant).toBe(true)
+    expect(response.body.sequences).toBeDefined()
+  })
+
   it('should return 400 for invalid input', async () => {
     const response = await request(app)
       .post('/mutant')
@@ -88,9 +102,7 @@ describe('POST /mutant', () => {
   })
 
   it('should return 400 when dna field is missing', async () => {
-    const response = await request(app)
-      .post('/mutant')
-      .send({})
+    const response = await request(app).post('/mutant').send({})
 
     expect(response.status).toBe(400)
   })

@@ -66,9 +66,7 @@ function Cell({ base, state, isHighlighted, index }: CellProps) {
   const delay = index * 0.015
 
   if (state === 'empty' || base === null) {
-    return (
-      <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-sm border border-border/15 bg-card/10" />
-    )
+    return <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-sm border border-border/15 bg-card/10" />
   }
 
   if (state === 'scanning') {
@@ -102,9 +100,10 @@ function Cell({ base, state, isHighlighted, index }: CellProps) {
         className={`
           w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center
           rounded-sm border font-mono text-xs sm:text-sm font-bold
-          ${isHighlighted
-            ? 'border-primary/60 bg-primary/20 text-primary shadow-md shadow-primary/20'
-            : 'border-border/20 bg-card/20 text-muted-foreground/40'
+          ${
+            isHighlighted
+              ? 'border-primary/60 bg-primary/20 text-primary shadow-md shadow-primary/20'
+              : 'border-border/20 bg-card/20 text-muted-foreground/40'
           }
         `}
       >

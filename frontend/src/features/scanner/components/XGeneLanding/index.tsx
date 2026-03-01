@@ -15,19 +15,16 @@ export function XGeneLanding({ started, onStart, transition }: XGeneLandingProps
       transition={transition}
       className={`text-center flex flex-col items-center ${started ? 'space-y-4 mb-10' : 'space-y-4'}`}
     >
-      <motion.div
-        animate={{ scale: started ? 0.65 : 1 }}
-        transition={transition}
-      >
+      <motion.div animate={{ scale: started ? 0.65 : 1 }} transition={transition}>
         <XGeneHero className="w-80 h-80 sm:w-[28rem] sm:h-[28rem]" />
       </motion.div>
 
-      <motion.h1
-        layout
-        className="text-4xl sm:text-5xl font-bold tracking-tight"
-      >
+      <motion.h1 layout className="text-4xl sm:text-5xl font-bold tracking-tight">
         {started ? (
-          <><span className="glow-text">DNA</span> <span className="text-primary glow-text">Scanner</span></>
+          <>
+            <span className="glow-text">DNA</span>{' '}
+            <span className="text-primary glow-text">Scanner</span>
+          </>
         ) : (
           <span className="text-primary glow-text">X-Gene Detector</span>
         )}
@@ -39,8 +36,7 @@ export function XGeneLanding({ started, onStart, transition }: XGeneLandingProps
       >
         {started
           ? 'Analyze DNA sequences to detect mutant genes. Powered by the X-Gene detection algorithm.'
-          : 'Magneto\'s mutant detection system. Analyze DNA sequences to identify the X-Gene hidden in the human genome.'
-        }
+          : "Magneto's mutant detection system. Analyze DNA sequences to identify the X-Gene hidden in the human genome."}
       </motion.p>
 
       {!started && (

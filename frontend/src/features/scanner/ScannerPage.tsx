@@ -6,8 +6,18 @@ import { useScannerSession, useScanner } from './hooks'
 export default function ScannerPage() {
   const { started, start } = useScannerSession()
   const {
-    input, handleInput, result, error, loading,
-    canSubmit, analyze, clear, dna, previewDna, gridState, liveValidation,
+    input,
+    handleInput,
+    result,
+    error,
+    loading,
+    canSubmit,
+    analyze,
+    clear,
+    dna,
+    previewDna,
+    gridState,
+    liveValidation,
   } = useScanner()
 
   const [wasStartedOnMount] = useState(started)
@@ -20,17 +30,15 @@ export default function ScannerPage() {
 
   return (
     <div>
-      <XGeneLanding
-        started={started}
-        onStart={start}
-        transition={transition}
-      />
+      <XGeneLanding started={started} onStart={start} transition={transition} />
 
       {started && (
         <motion.div
           initial={skipTransition ? false : { opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={skipTransition ? { duration: 0 } : { duration: 0.6, delay: 0.4, ease: 'easeOut' }}
+          transition={
+            skipTransition ? { duration: 0 } : { duration: 0.6, delay: 0.4, ease: 'easeOut' }
+          }
         >
           <ScannerForm
             input={input}

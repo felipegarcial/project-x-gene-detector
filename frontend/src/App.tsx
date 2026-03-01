@@ -13,14 +13,16 @@ function App() {
         <Header />
         <main className="mx-auto max-w-3xl px-4 py-10">
           <ErrorBoundary>
-            <Suspense fallback={
-              <div className="flex items-center justify-center py-20">
-                <div className="flex items-center gap-3 text-muted-foreground">
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                  <span>Loading...</span>
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center py-20">
+                  <div className="flex items-center gap-3 text-muted-foreground">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                    <span>Loading...</span>
+                  </div>
                 </div>
-              </div>
-            }>
+              }
+            >
               <Routes>
                 <Route path="/" element={<ScannerPage />} />
                 <Route path="/stats" element={<StatsPage />} />

@@ -12,7 +12,7 @@ export const dnaSchema = z.object({
         const n = dna.length
         return dna.every((row) => row.length === n)
       },
-      { message: 'DNA must be a square NxN matrix' }
+      { message: 'DNA must be a square NxN matrix' },
     ),
 })
 

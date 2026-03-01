@@ -76,9 +76,7 @@ describe('validateDna', () => {
   })
 
   it('returns null for valid 6x6 DNA', () => {
-    expect(validateDna([
-      'ATGCGA', 'CAGTGC', 'TTATGT', 'AGAAGG', 'CCCCTA', 'TCACTG',
-    ])).toBeNull()
+    expect(validateDna(['ATGCGA', 'CAGTGC', 'TTATGT', 'AGAAGG', 'CCCCTA', 'TCACTG'])).toBeNull()
   })
 
   it('returns null for empty array (no error, just nothing to validate)', () => {

@@ -1,30 +1,30 @@
-import { motion } from "motion/react";
+import { motion } from 'motion/react'
 
 interface DnaDonutChartProps {
-  mutant: number;
-  human: number;
+  mutant: number
+  human: number
 }
 
-const SIZE = 200;
-const PAD = 20;
-const VIEWBOX = SIZE + PAD * 2;
-const CENTER = VIEWBOX / 2;
-const STROKE = 24;
-const RADIUS = (SIZE - STROKE) / 2;
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+const SIZE = 200
+const PAD = 20
+const VIEWBOX = SIZE + PAD * 2
+const CENTER = VIEWBOX / 2
+const STROKE = 24
+const RADIUS = (SIZE - STROKE) / 2
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
 export function DnaDonutChart({ mutant, human }: DnaDonutChartProps) {
-  const total = mutant + human;
-  const mutantPct = total > 0 ? mutant / total : 0;
+  const total = mutant + human
+  const mutantPct = total > 0 ? mutant / total : 0
 
-  const mutantDash = mutantPct * CIRCUMFERENCE;
-  const humanDash = (1 - mutantPct) * CIRCUMFERENCE;
+  const mutantDash = mutantPct * CIRCUMFERENCE
+  const humanDash = (1 - mutantPct) * CIRCUMFERENCE
 
-  const gap = total > 0 && mutant > 0 && human > 0 ? 8 : 0;
-  const mutantArc = Math.max(mutantDash - gap, 0);
-  const humanArc = Math.max(humanDash - gap, 0);
+  const gap = total > 0 && mutant > 0 && human > 0 ? 8 : 0
+  const mutantArc = Math.max(mutantDash - gap, 0)
+  const humanArc = Math.max(humanDash - gap, 0)
 
-  const humanOffset = mutantDash + gap / 2;
+  const humanOffset = mutantDash + gap / 2
 
   if (total === 0) {
     return (
@@ -50,7 +50,7 @@ export function DnaDonutChart({ mutant, human }: DnaDonutChartProps) {
           </text>
         </svg>
       </div>
-    );
+    )
   }
 
   return (
@@ -95,7 +95,7 @@ export function DnaDonutChart({ mutant, human }: DnaDonutChartProps) {
           animate={{
             strokeDasharray: `${humanArc} ${CIRCUMFERENCE - humanArc}`,
           }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+          transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
           transform={`rotate(90 ${CENTER} ${CENTER})`}
           filter="url(#glow-donut)"
         />
@@ -113,7 +113,7 @@ export function DnaDonutChart({ mutant, human }: DnaDonutChartProps) {
           animate={{
             strokeDasharray: `${mutantArc} ${CIRCUMFERENCE - mutantArc}`,
           }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
           transform={`rotate(90 ${CENTER} ${CENTER})`}
           filter="url(#glow-donut)"
         />
@@ -124,7 +124,7 @@ export function DnaDonutChart({ mutant, human }: DnaDonutChartProps) {
           textAnchor="middle"
           dominantBaseline="central"
           className="fill-foreground font-bold"
-          style={{ fontSize: "1.75rem" }}
+          style={{ fontSize: '1.75rem' }}
         >
           {Math.round(mutantPct * 100)}%
         </text>
@@ -134,7 +134,7 @@ export function DnaDonutChart({ mutant, human }: DnaDonutChartProps) {
           textAnchor="middle"
           dominantBaseline="central"
           className="fill-muted-foreground font-semibold"
-          style={{ fontSize: "0.85rem" }}
+          style={{ fontSize: '0.85rem' }}
         >
           mutant
         </text>
@@ -142,10 +142,7 @@ export function DnaDonutChart({ mutant, human }: DnaDonutChartProps) {
 
       <div className="flex gap-6 text-xs">
         <div className="flex items-center gap-2">
-          <div
-            className="w-3 h-3 rounded-full"
-            style={{ backgroundColor: "var(--color-hero)" }}
-          />
+          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--color-hero)' }} />
           <span className="text-primary">Mutant DNA ({mutant})</span>
         </div>
         <div className="flex items-center gap-2">
@@ -154,5 +151,5 @@ export function DnaDonutChart({ mutant, human }: DnaDonutChartProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }

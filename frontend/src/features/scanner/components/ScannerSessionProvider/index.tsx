@@ -9,9 +9,5 @@ export function ScannerSessionProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(() => ({ started, start }), [started, start])
 
-  return (
-    <ScannerSessionContext.Provider value={value}>
-      {children}
-    </ScannerSessionContext.Provider>
-  )
+  return <ScannerSessionContext.Provider value={value}>{children}</ScannerSessionContext.Provider>
 }

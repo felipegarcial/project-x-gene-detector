@@ -23,9 +23,7 @@ describeIntegration('POST /mutant (integration)', () => {
     await cleanupByHashes(testHashes)
   })
   it('should detect mutant DNA and persist to database', async () => {
-    const res = await request(app)
-      .post('/mutant')
-      .send({ dna: MUTANT_DNA })
+    const res = await request(app).post('/mutant').send({ dna: MUTANT_DNA })
 
     expect(res.status).toBe(200)
     expect(res.body.is_mutant).toBe(true)
@@ -34,9 +32,7 @@ describeIntegration('POST /mutant (integration)', () => {
   })
 
   it('should detect human DNA and persist to database', async () => {
-    const res = await request(app)
-      .post('/mutant')
-      .send({ dna: HUMAN_DNA })
+    const res = await request(app).post('/mutant').send({ dna: HUMAN_DNA })
 
     expect(res.status).toBe(403)
     expect(res.body.is_mutant).toBe(false)
@@ -44,18 +40,14 @@ describeIntegration('POST /mutant (integration)', () => {
   })
 
   it('should return cached result for duplicate mutant DNA', async () => {
-    const res = await request(app)
-      .post('/mutant')
-      .send({ dna: MUTANT_DNA })
+    const res = await request(app).post('/mutant').send({ dna: MUTANT_DNA })
 
     expect(res.status).toBe(200)
     expect(res.body.is_mutant).toBe(true)
   })
 
   it('should return cached result for duplicate human DNA', async () => {
-    const res = await request(app)
-      .post('/mutant')
-      .send({ dna: HUMAN_DNA })
+    const res = await request(app).post('/mutant').send({ dna: HUMAN_DNA })
 
     expect(res.status).toBe(403)
     expect(res.body.is_mutant).toBe(false)

@@ -15,18 +15,18 @@ export const mutantController = {
 
     const { dna } = result.data
 
-    const dnaHash = crypto
-      .createHash('sha256')
-      .update(dna.join(','))
-      .digest('hex')
+    const dnaHash = crypto.createHash('sha256').update(dna.join(',')).digest('hex')
 
-    const cached = await mutantRepository.findByHash(dnaHash)
-    if (cached) {
-      // API contract: 200 = mutant, 403 = human
-      res.status(cached.is_mutant ? 200 : 403).json({
-        is_mutant: cached.is_mutant,
-      })
-      return
+    try {
+      const cached = await mutantRepository.findByHash(dnaHash)
+      if (cached) {
+        res.status(cached.is_mutant ? 200 : 403).json({
+          is_mutant: cached.is_mutant,
+        })
+        return
+      }
+    } catch (err) {
+      logger.error({ err, dnaHash }, 'Cache lookup failed, computing result')
     }
 
     const { is_mutant, sequences } = isMutant(dna)

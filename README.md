@@ -143,8 +143,9 @@ Returns database connectivity status.
 ## Testing
 
 ```bash
-npm test              # runs all unit tests (30 tests)
-npm run test:coverage # coverage report (>80%)
+npm test                                    # runs backend + frontend unit tests
+npm run test:coverage --workspace=backend   # backend coverage report
+npm run test:coverage --workspace=frontend  # frontend coverage report
 ```
 
 Integration tests (require a test Supabase instance):
@@ -162,7 +163,7 @@ npm run test:integration --workspace=backend
 | Frontend | React 19, Vite 7, Tailwind CSS v4, Framer Motion   |
 | Backend  | Express 5, TypeScript 5.9, Zod, Pino, Helmet       |
 | Database | Supabase (PostgreSQL) with upsert + SHA-256 hashing |
-| Testing  | Vitest, Supertest                                   |
+| Testing  | Vitest, Supertest, Testing Library                  |
 | Monorepo | npm workspaces                                      |
 
 ## Project Structure

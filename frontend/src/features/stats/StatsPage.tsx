@@ -23,7 +23,10 @@ export default function StatsPage() {
   if (error) {
     return (
       <div className="flex flex-col items-center gap-4 py-20">
-        <div role="alert" className="rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+        <div
+          role="alert"
+          className="rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+        >
           {error}
         </div>
         <Button variant="outline" onClick={retry} className="cursor-pointer">
@@ -39,7 +42,8 @@ export default function StatsPage() {
     <div className="space-y-10">
       <div className="text-center">
         <h1 className="text-4xl font-bold tracking-tight">
-          <span className="glow-text">DNA</span> <span className="text-primary glow-text">Statistics</span>
+          <span className="glow-text">DNA</span>{' '}
+          <span className="text-primary glow-text">Statistics</span>
         </h1>
         <p className="text-muted-foreground mt-2">
           Global DNA verification results from the X-Gene database.

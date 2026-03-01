@@ -24,7 +24,7 @@ function findSequence(
   col: number,
   dr: number,
   dc: number,
-  n: number
+  n: number,
 ): SequenceCoords | null {
   const endRow = row + dr * (SEQUENCE_LENGTH - 1)
   const endCol = col + dc * (SEQUENCE_LENGTH - 1)

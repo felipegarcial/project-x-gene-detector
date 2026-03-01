@@ -17,7 +17,9 @@ export function normalizeInput(raw: string): string {
       if (Array.isArray(parsed)) {
         return parsed.map((s: string) => String(s).trim().toUpperCase()).join('\n')
       }
-    } catch { /* not valid JSON, continue */ }
+    } catch {
+      /* not valid JSON, continue */
+    }
   }
 
   if (raw.includes('\n')) {
@@ -172,7 +174,17 @@ export function useScanner() {
         : 'empty'
 
   return {
-    input, handleInput, result, error, loading, canSubmit,
-    analyze, clear, dna, previewDna, gridState, liveValidation,
+    input,
+    handleInput,
+    result,
+    error,
+    loading,
+    canSubmit,
+    analyze,
+    clear,
+    dna,
+    previewDna,
+    gridState,
+    liveValidation,
   }
 }

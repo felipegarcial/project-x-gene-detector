@@ -29,12 +29,7 @@ export function XGeneHero({ className = 'w-64 h-64 sm:w-80 sm:h-80' }: XGeneHero
 
   return (
     <div className="flex items-center justify-center">
-      <svg
-        ref={svgRef}
-        viewBox="0 0 400 400"
-        className={className}
-        aria-hidden="true"
-      >
+      <svg ref={svgRef} viewBox="0 0 400 400" className={className} aria-hidden="true">
         <defs>
           <linearGradient id="grad-mid" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor={colors.primary} stopOpacity="0.5" />
@@ -59,7 +54,9 @@ export function XGeneHero({ className = 'w-64 h-64 sm:w-80 sm:h-80' }: XGeneHero
 
         <circle
           className="center-glow"
-          cx={CX} cy={CY} r={60}
+          cx={CX}
+          cy={CY}
+          r={60}
           fill="url(#grad-center)"
           opacity={0}
           style={{ transformOrigin: ORIGIN }}
@@ -72,7 +69,9 @@ export function XGeneHero({ className = 'w-64 h-64 sm:w-80 sm:h-80' }: XGeneHero
               <circle
                 key={i}
                 className="seg"
-                cx={CX} cy={CY} r={OUTER_R}
+                cx={CX}
+                cy={CY}
+                r={OUTER_R}
                 fill="none"
                 stroke={seg.color}
                 strokeWidth={OUTER_WIDTH}
@@ -88,7 +87,9 @@ export function XGeneHero({ className = 'w-64 h-64 sm:w-80 sm:h-80' }: XGeneHero
         <g className="ring-middle" style={{ transformOrigin: ORIGIN }} filter="url(#glow)">
           <circle
             className="ring-circle"
-            cx={CX} cy={CY} r={150}
+            cx={CX}
+            cy={CY}
+            r={150}
             fill="none"
             stroke="url(#grad-mid)"
             strokeWidth={1.5}
@@ -110,7 +111,10 @@ export function XGeneHero({ className = 'w-64 h-64 sm:w-80 sm:h-80' }: XGeneHero
               <line
                 key={i}
                 className="tick"
-                x1={x1} y1={y1} x2={x2} y2={y2}
+                x1={x1}
+                y1={y1}
+                x2={x2}
+                y2={y2}
                 stroke={colors.primary}
                 strokeWidth={1}
                 opacity={0}
@@ -123,7 +127,9 @@ export function XGeneHero({ className = 'w-64 h-64 sm:w-80 sm:h-80' }: XGeneHero
         <g className="ring-inner" style={{ transformOrigin: ORIGIN }} filter="url(#glow)">
           <circle
             className="ring-circle"
-            cx={CX} cy={CY} r={120}
+            cx={CX}
+            cy={CY}
+            r={120}
             fill="none"
             stroke="url(#grad-inner)"
             strokeWidth={1}
